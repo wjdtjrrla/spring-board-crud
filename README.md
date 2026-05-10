@@ -64,3 +64,9 @@ src/main/java/com/example/board
 - 게시글 삭제 구현
 - Service 계층 분리
 - DI 개념 기초 학습
+
+### 3일차
+- JPA
+- Entity
+- Repository
+- DB 흐름
