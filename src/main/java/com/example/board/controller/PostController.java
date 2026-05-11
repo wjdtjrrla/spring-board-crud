@@ -1,8 +1,13 @@
 package com.example.board.controller;
 
-import com.example.board.domain.Post;
+import com.example.board.dto.ApiResponseDto;
+import com.example.board.dto.PostRequestDto;
+import com.example.board.dto.PostResponseDto;
 import com.example.board.service.PostService;
 import org.springframework.web.bind.annotation.*;
+
+//데이터 검증 라이브러리
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -16,18 +21,29 @@ public class PostController {
         this.postService = postService;
     }
 
+    /*
+     * 게시글 생성 API
+     *
+     * POST /api/posts
+     */
     @PostMapping
-    public Post createPost(@RequestBody Post post) {
-        return postService.createPost(post);
+    public ApiResponseDto<PostResponseDto> createPost(
+            @Valid @RequestBody PostRequestDto requestDto
+    ) {
+        PostResponseDto responseDto = postService.createPost(requestDto);
+
+        return ApiResponseDto.success("게시글 생성 성공", responseDto);
     }
     /*
      * 게시글 전체 조회 API
      *
-     * GET /api/posts/{id}
+     * GET /api/posts
      */
     @GetMapping
-    public List<Post> getPosts() {
-        return postService.getPosts();
+    public ApiResponseDto<List<PostResponseDto>> getPosts() {
+        List<PostResponseDto> responseDtos = postService.getPosts();
+
+        return ApiResponseDto.success("게시글 전체 조회 성공", responseDtos);
     }
     /*
      * 게시글 단건 조회 API
@@ -35,30 +51,38 @@ public class PostController {
      * GET /api/posts/{id}
      */
     @GetMapping("/{id}")
-    public Post getPost(@PathVariable Long id) {
-        return postService.getPost(id);
+    public ApiResponseDto<PostResponseDto> getPost(@PathVariable Long id) {
+        PostResponseDto responseDto = postService.getPost(id);
+
+        return ApiResponseDto.success("게시글 단건 조회 성공", responseDto);
     }
+
     /*
      * 게시글 수정 API
      *
      * PUT /api/posts/{id}
      */
     @PutMapping("/{id}")
-    public Post updatePost(
+    public ApiResponseDto<PostResponseDto> updatePost(
             @PathVariable Long id,
-            @RequestBody Post updatedPost
+            @Valid @RequestBody PostRequestDto requestDto
     ) {
-        return postService.updatePost(id, updatedPost);
+        PostResponseDto responseDto = postService.updatePost(id, requestDto);
+
+        return ApiResponseDto.success("게시글 수정 성공", responseDto);
     }
 
     /*
      * 게시글 삭제 API
      *
      * DELETE /api/posts/{id}
+     *
+     * 삭제는 반환할 데이터가 없기 때문에 data는 null로 둔다.
      */
     @DeleteMapping("/{id}")
-    public String deletePost(@PathVariable Long id) {
+    public ApiResponseDto<Void> deletePost(@PathVariable Long id) {
         postService.deletePost(id);
-        return "삭제 완료";
+
+        return ApiResponseDto.success("게시글 삭제 성공", null);
     }
 }
