@@ -182,6 +182,18 @@ src/main/java/com/example/board
 
 ---
 
+## 업데이트
+### 2026-05-13 
+
+* updatePost 메서드 로직 수정.
+* 게시글 수정 로직에서는 JPA의 변경 감지(Dirty Checking)를 활용
+* findById()로 조회한 Entity는 영속성 컨텍스트에서 관리
+* @Transactional 범위 안에서 Entity 값을 변경하면 트랜잭션 종료 시점에 UPDATE SQL이 자동 실행
+* 수정 로직에서는 불필요한 save() 호출 제거
+
+
+---
+
 # 실행 방법
 
 ## 프로젝트 실행

@@ -152,6 +152,7 @@ import com.example.board.dto.PostResponseDto;
 import com.example.board.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import com.example.board.exception.PostNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -209,7 +210,7 @@ public class PostService {
 //     *
 //     * DB에서 Post Entity 목록을 조회한 뒤,
 //     * 각각 PostResponseDto로 변환해서 반환한다.
-
+    @Transactional(readOnly = true)
     public List<PostResponseDto> getPosts() {
 
         List<Post> posts = postRepository.findAll();
@@ -224,7 +225,7 @@ public class PostService {
 //     *
 //     * id로 Entity를 찾고,
 //     * 찾은 Entity를 ResponseDto로 변환해서 반환한다.
-
+    @Transactional(readOnly = true)
     public PostResponseDto getPost(Long id) {
 
         Post post = postRepository.findById(id)
@@ -240,7 +241,7 @@ public class PostService {
 //     * 2. RequestDto의 값으로 Entity를 수정한다.
 //     * 3. 수정된 Entity를 저장한다.
 //     * 4. ResponseDto로 변환해서 반환한다.
-
+    @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto requestDto) {
 
         Post post = postRepository.findById(id)
@@ -251,9 +252,7 @@ public class PostService {
                 requestDto.getContent()
         );
 
-        Post updatedPost = postRepository.save(post);
-
-        return new PostResponseDto(updatedPost);
+        return new PostResponseDto(post);
     }
 
 
